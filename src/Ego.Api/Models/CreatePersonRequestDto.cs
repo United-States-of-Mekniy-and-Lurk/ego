@@ -50,11 +50,16 @@ internal static class PersonStatusMapper
             return false;
         }
 
-        return value.ToLowerInvariant() switch
+        switch (value.ToLowerInvariant())
         {
-            "active" => (status = PersonStatus.Active) == PersonStatus.Active,
-            "disabled" => (status = PersonStatus.Disabled) == PersonStatus.Disabled,
-            _ => false
-        };
+            case "active":
+                status = PersonStatus.Active;
+                return true;
+            case "disabled":
+                status = PersonStatus.Disabled;
+                return true;
+            default:
+                return false;
+        }
     }
 }
