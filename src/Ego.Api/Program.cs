@@ -11,6 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestMethod |
+                            Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPath |
+                            Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestQuery |
+                            Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseStatusCode |
+                            Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Duration;
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -42,6 +50,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpLogging();
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ego.Api.Middleware;
 
-public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
+public class GlobalExceptionHandler(
+    IProblemDetailsService problemDetailsService,
+    ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
@@ -15,6 +17,25 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
             PersonAlreadyExistsException => StatusCodes.Status409Conflict,
             _ => StatusCodes.Status500InternalServerError
         };
+
+        if (statusCode >= StatusCodes.Status500InternalServerError)
+        {
+            logger.LogError(
+                exception,
+                "Unhandled exception for {Method} {Path}. TraceId: {TraceId}",
+                httpContext.Request.Method,
+                httpContext.Request.Path,
+                httpContext.TraceIdentifier);
+        }
+        else
+        {
+            logger.LogWarning(
+                exception,
+                "Handled exception for {Method} {Path}. TraceId: {TraceId}",
+                httpContext.Request.Method,
+                httpContext.Request.Path,
+                httpContext.TraceIdentifier);
+        }
 
         httpContext.Response.StatusCode = statusCode;
 
