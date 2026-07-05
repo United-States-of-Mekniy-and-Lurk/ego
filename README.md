@@ -50,7 +50,7 @@ Current synchronization flow:
 
 The Person Registry is OpenAPI-first. See:
 
-- `/home/runner/work/ego/ego/openapi/person-registry.yaml`
+- `openapi/person-registry.yaml`
 
 Initial endpoints:
 
