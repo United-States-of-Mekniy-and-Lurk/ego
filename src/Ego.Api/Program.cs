@@ -1,3 +1,4 @@
+using Ego.Api;
 using Ego.Api.Middleware;
 using Ego.Application.Abstractions;
 using Ego.Application.Services;
