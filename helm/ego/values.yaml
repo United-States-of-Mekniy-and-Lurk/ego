@@ -1,35 +1,28 @@
 nameOverride: ""
 fullnameOverride: ""
-
 replicaCount: 2
-
 image:
   repository: ghcr.io/united-states-of-mekniy-and-lurk/ego
   pullPolicy: IfNotPresent
   # Automatically updated by the helm-release workflow after each successful Docker push to main.
-  tag: "latest"
-
+  tag: "sha-d84d859"
 serviceAccount:
   create: true
   annotations: {}
   name: ""
-
 podSecurityContext:
   runAsNonRoot: true
   runAsUser: 1001
   runAsGroup: 1001
-
 containerSecurityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: true
   capabilities:
     drop: ["ALL"]
-
 service:
   type: ClusterIP
   port: 80
   targetPort: 8080
-
 ingress:
   enabled: true
   className: nginx
@@ -39,7 +32,6 @@ ingress:
   tls:
     enabled: true
     secretName: ego-api-tls
-
 resources:
   requests:
     memory: "128Mi"
@@ -47,7 +39,6 @@ resources:
   limits:
     memory: "512Mi"
     cpu: "500m"
-
 probes:
   readiness:
     path: /health/ready
@@ -57,14 +48,12 @@ probes:
     path: /health/live
     initialDelaySeconds: 30
     periodSeconds: 30
-
 config:
   aspnetcoreEnvironment: Production
   keycloak:
     authority: "https://keycloak.example.com/realms/mekniy-and-lurk"
     audience: "account"
     requireHttpsMetadata: "true"
-
 # Plain-text secret values used when externalSecrets.enabled is false.
 # Leave connectionString empty to auto-derive it from postgresql.* values (when postgresql.enabled is true).
 # Never commit real credentials here — pass them at deploy time:
@@ -74,7 +63,6 @@ config:
 # For Argo CD deployments, enable externalSecrets instead of storing secrets in git.
 secrets:
   connectionString: ""
-
 # External Secrets Operator (ESO) integration.
 # Set enabled: true for Argo CD deployments where secrets are managed by ESO.
 # Requires ESO (https://external-secrets.io) and a ClusterSecretStore/SecretStore in the cluster.
@@ -90,7 +78,6 @@ externalSecrets:
         # Path to the secret in your secret backend (e.g. AWS Secrets Manager, Vault, GCP SM).
         key: "ego/api"
         property: "connection-string"
-
 # In-cluster PostgreSQL. Set enabled: false to use an external managed database.
 postgresql:
   enabled: true
