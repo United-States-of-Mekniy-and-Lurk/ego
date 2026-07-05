@@ -13,7 +13,7 @@ data:
 ---
 # Ego API Secret — REPLACE the connection string value below before applying.
 # In production use sealed-secrets or external-secrets instead of a plain Secret.
-# Full connection string format: Host=<host>;Database=ego;Username=ego;******
+# Full connection string format: Host=<host>;Database=ego;Username=ego;Password=REPLACE_ME
 apiVersion: v1
 kind: Secret
 metadata:
@@ -21,9 +21,9 @@ metadata:
   namespace: ego
 type: Opaque
 stringData:
-  # Replace this placeholder with the actual connection string before deploying.
-  # Retrieve the postgres-secret POSTGRES_PASSWORD value to fill in the password.
-  ConnectionStrings__DefaultConnection: "Host=postgres;Database=ego;Username=ego;<your-postgres-password>"
+  # Replace REPLACE_ME with the actual password (from postgres-secret POSTGRES_PASSWORD).
+  # Using REPLACE_ME keeps the string syntactically invalid until intentionally configured.
+  ConnectionStrings__DefaultConnection: "Host=postgres;Database=ego;Username=ego;Password=REPLACE_ME"
 ---
 # Ego API Deployment
 apiVersion: apps/v1
