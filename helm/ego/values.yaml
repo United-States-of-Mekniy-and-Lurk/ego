@@ -5,7 +5,7 @@ image:
   repository: ghcr.io/united-states-of-mekniy-and-lurk/ego
   pullPolicy: IfNotPresent
   # Automatically updated by the helm-release workflow after each successful Docker push to main.
-  tag: "sha-7a16e61"
+  tag: "sha-7ef56be"
 serviceAccount:
   create: true
   annotations: {}
