@@ -1,0 +1,182 @@
+openapi: 3.0.3
+info:
+  title: Ego Person Registry API
+  version: 0.1.0
+  description: |
+    Canonical Person Registry API for Mekniy and Lurk.
+    This API provides the identity bridge between authentication providers
+    and domain services.
+servers:
+  - url: https://ego.local
+security:
+  - bearerAuth: []
+paths:
+  /persons/{id}:
+    get:
+      operationId: getPersonById
+      summary: Get a person by platform identifier
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+      responses:
+        '200':
+          description: Person found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        '404':
+          description: Person not found
+    patch:
+      operationId: patchPerson
+      summary: Patch mutable person fields
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchPersonRequest'
+      responses:
+        '200':
+          description: Person updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        '404':
+          description: Person not found
+  /persons/by-sub/{sub}:
+    get:
+      operationId: getPersonBySub
+      summary: Get a person by authentication subject
+      parameters:
+        - in: path
+          name: sub
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Person found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        '404':
+          description: Person not found
+  /persons:
+    post:
+      operationId: createPerson
+      summary: Create a person
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePersonRequest'
+      responses:
+        '201':
+          description: Person created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+  /me:
+    get:
+      operationId: getCurrentPerson
+      summary: Resolve authenticated identity to person
+      description: |
+        Uses the bearer token claims to resolve (or provision) the corresponding
+        Person and returns the canonical registry record.
+      responses:
+        '200':
+          description: Current person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    PersonId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    PersonStatus:
+      type: string
+      enum:
+        - active
+        - disabled
+    Person:
+      type: object
+      required:
+        - id
+        - keycloakSub
+        - preferredUsername
+        - displayName
+        - email
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        keycloakSub:
+          type: string
+          description: Stable subject claim from the configured auth provider.
+        preferredUsername:
+          type: string
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        status:
+          $ref: '#/components/schemas/PersonStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreatePersonRequest:
+      type: object
+      required:
+        - keycloakSub
+        - preferredUsername
+        - displayName
+        - email
+      properties:
+        keycloakSub:
+          type: string
+        preferredUsername:
+          type: string
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        status:
+          $ref: '#/components/schemas/PersonStatus'
+    PatchPersonRequest:
+      type: object
+      properties:
+        preferredUsername:
+          type: string
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        status:
+          $ref: '#/components/schemas/PersonStatus'
