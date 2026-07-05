@@ -63,3 +63,23 @@ Initial endpoints:
 `GET /me` resolves the authenticated JWT into the corresponding `Person`.
 
 The service does not expose Keycloak administration APIs.
+
+## Configuration
+
+Override the following via environment variables when deploying:
+
+| Variable | Purpose |
+|---|---|
+| `ConnectionStrings__DefaultConnection` | Full Npgsql connection string (include `****** |
+| `Keycloak__Authority` | Keycloak realm base URL, e.g. `https://keycloak.local/realms/mekniy-and-lurk` |
+| `Keycloak__Audience` | Expected JWT audience, e.g. `account` |
+
+The `appsettings.json` in the repository does not contain a database password.
+Supply the full connection string at runtime via the environment variable above.
+
+## Running migrations
+
+```sh
+cd src/Ego.Api
+dotnet ef database update
+```

@@ -2,6 +2,7 @@ using Ego.Application.Abstractions;
 using Ego.Application.Exceptions;
 using Ego.Application.Models;
 using Ego.Domain.Entities;
+using Ego.Domain.Enums;
 
 namespace Ego.Application.Services;
 
@@ -32,7 +33,7 @@ public class PersonRegistryService(IPersonRepository personRepository)
             command.PreferredUsername,
             command.DisplayName,
             command.Email,
-            command.Status ?? Ego.Domain.Enums.PersonStatus.Active);
+            command.Status ?? PersonStatus.Active);
 
         await personRepository.AddAsync(person, ct);
         await personRepository.SaveChangesAsync(ct);
