@@ -85,7 +85,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Person'
         '409':
-          description: Person already exists for the provided identity subject
+          description: Person already exists for the provided identitySubject (unique constraint)
   /me:
     get:
       operationId: getCurrentPerson
@@ -117,6 +117,8 @@ components:
   schemas:
     PersonStatus:
       type: string
+      description: Person lifecycle status. Defaults to active when not provided at creation.
+      default: active
       enum:
         - active
         - disabled
@@ -172,8 +174,10 @@ components:
           format: email
         status:
           $ref: '#/components/schemas/PersonStatus'
+          description: Defaults to active when omitted.
     PatchPersonRequest:
       type: object
+      minProperties: 1
       properties:
         preferredUsername:
           type: string
