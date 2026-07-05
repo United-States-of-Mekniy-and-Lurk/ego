@@ -70,9 +70,10 @@ Name of the in-cluster PostgreSQL Service (used to auto-derive the connection st
 {{/*
 Resolve the effective database connection string.
 Priority:
-  1. secrets.connectionString (explicit override)
-  2. Auto-derived from postgresql.* values when postgresql.enabled is true
-  3. Fallback placeholder
+  1. secrets.connectionString (explicit override via --set at deploy time)
+  2. Auto-derived from postgresql.* values when postgresql.enabled is true.
+     Pass the password via --set at deploy time; never commit a real value to git.
+  3. Fallback placeholder.
 */}}
 {{- define "ego.connectionString" -}}
 {{- if .Values.secrets.connectionString }}
@@ -80,6 +81,6 @@ Priority:
 {{- else if .Values.postgresql.enabled }}
 {{- printf "Host=%s;Database=%s;Username=%s;Password=%s" (include "ego.postgresServiceName" .) .Values.postgresql.database .Values.postgresql.username .Values.postgresql.password }}
 {{- else }}
-REPLACE_ME
+CHANGE_THIS_CONNECTION_STRING_BEFORE_DEPLOYING
 {{- end }}
 {{- end }}

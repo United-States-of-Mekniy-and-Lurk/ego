@@ -67,10 +67,11 @@ config:
 
 # Plain-text secret values used when externalSecrets.enabled is false.
 # Leave connectionString empty to auto-derive it from postgresql.* values (when postgresql.enabled is true).
-# For direct Helm deploys from CI:
+# Never commit real credentials here — pass them at deploy time:
 #   helm upgrade --install ego ./helm/ego \
-#     --set secrets.connectionString="Host=...;******" \
-#     --set postgresql.******
+#     --set postgresql.****** \
+#     --set secrets.connectionString="Host=...;Username=ego;******"
+# For Argo CD deployments, enable externalSecrets instead of storing secrets in git.
 secrets:
   connectionString: ""
 
@@ -105,7 +106,10 @@ postgresql:
       memory: "512Mi"
       cpu: "500m"
   # Plain-text password used when postgresql.externalSecrets.enabled is false.
-  password: "REPLACE_ME"
+  # Never commit a real password here — pass it at deploy time:
+  #   helm upgrade --install ego ./helm/ego --set postgresql.******
+  # For Argo CD deployments, enable postgresql.externalSecrets instead.
+  password: "CHANGE_THIS_PASSWORD_BEFORE_DEPLOYING"
   externalSecrets:
     enabled: false
     refreshInterval: "1h"
