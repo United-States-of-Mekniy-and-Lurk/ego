@@ -21,7 +21,7 @@ replaceable.
 The first version of the Person Registry is intentionally small and models only:
 
 - Person ID
-- Keycloak subject (`sub`)
+- Identity subject (`sub`, currently from Keycloak)
 - Preferred username
 - Display name
 - Email

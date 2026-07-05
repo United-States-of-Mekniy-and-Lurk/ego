@@ -44,6 +44,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Person'
+        '400':
+          description: Invalid patch payload
         '404':
           description: Person not found
   /persons/by-sub/{sub}:
@@ -82,6 +84,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Person'
+        '409':
+          description: Person already exists for the provided identity subject
   /me:
     get:
       operationId: getCurrentPerson
@@ -120,7 +124,7 @@ components:
       type: object
       required:
         - id
-        - keycloakSub
+        - identitySubject
         - preferredUsername
         - displayName
         - email
@@ -131,9 +135,9 @@ components:
         id:
           type: string
           format: uuid
-        keycloakSub:
+        identitySubject:
           type: string
-          description: Stable subject claim from the configured auth provider.
+          description: Stable subject claim from the configured authentication provider (currently Keycloak).
         preferredUsername:
           type: string
         displayName:
@@ -152,12 +156,12 @@ components:
     CreatePersonRequest:
       type: object
       required:
-        - keycloakSub
+        - identitySubject
         - preferredUsername
         - displayName
         - email
       properties:
-        keycloakSub:
+        identitySubject:
           type: string
         preferredUsername:
           type: string
@@ -180,3 +184,7 @@ components:
           format: email
         status:
           $ref: '#/components/schemas/PersonStatus'
+          description: |
+            Administrative status managed by authorized platform actors.
+            Identity synchronization updates username/display name/email only
+            and does not change status.
