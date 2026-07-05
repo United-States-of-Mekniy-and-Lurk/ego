@@ -11,7 +11,9 @@ data:
   Keycloak__Audience: "account"
   Keycloak__RequireHttpsMetadata: "true"
 ---
-# Ego API Secret (override with sealed-secrets or external-secrets in production)
+# Ego API Secret — REPLACE the connection string value below before applying.
+# In production use sealed-secrets or external-secrets instead of a plain Secret.
+# Full connection string format: Host=<host>;Database=ego;Username=ego;******
 apiVersion: v1
 kind: Secret
 metadata:
@@ -19,6 +21,8 @@ metadata:
   namespace: ego
 type: Opaque
 stringData:
+  # Replace this placeholder with the actual connection string before deploying.
+  # Retrieve the postgres-secret POSTGRES_PASSWORD value to fill in the password.
   ConnectionStrings__DefaultConnection: "Host=postgres;Database=ego;Username=ego;<your-postgres-password>"
 ---
 # Ego API Deployment

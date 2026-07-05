@@ -6,3 +6,4 @@ obj/
 *.userosscache
 *.swp
 *.DS_Store
+.env
